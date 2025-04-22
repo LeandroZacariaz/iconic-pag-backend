@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ecommerce.user_service.domain.User;
+import com.ecommerce.user_service.domain.enums.RoleEnumUser;
 import com.ecommerce.user_service.dto.user.UserRegisterDto;
 import com.ecommerce.user_service.mappers.user.UserMapper;
 import com.ecommerce.user_service.repository.UserRepository;
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService{
     public User createUser(UserRegisterDto userRegisterDto) {
         User userCreated=userMapper.userRegisterDtoToUser(userRegisterDto);
         userCreated.setPassword(passwordEncoder.encode(userRegisterDto.password()));
+        userCreated.setRole(RoleEnumUser.USER);
         return userRepository.save(userCreated);
     }
 

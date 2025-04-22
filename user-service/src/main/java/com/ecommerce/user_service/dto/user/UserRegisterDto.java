@@ -1,5 +1,7 @@
 package com.ecommerce.user_service.dto.user;
 
+import com.ecommerce.user_service.domain.enums.RoleEnumUser;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -19,6 +21,9 @@ public record UserRegisterDto(
     @NotNull(message = "The user password cannot be null.")
     @NotBlank(message = "The user password cannot be empty.")
     @Schema(description = "Contraseña del usuario", example = "securePass123")
-    String password) {
+    String password,
+    @NotBlank
+    @NotNull
+    RoleEnumUser role) {
 
 }

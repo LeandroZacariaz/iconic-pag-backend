@@ -3,7 +3,6 @@ package com.ecommerce.product_catalog_service.service.product;
 import java.util.List;
 import java.util.Map;
 
-
 import org.springframework.stereotype.Service;
 
 import com.cloudinary.Cloudinary;
@@ -26,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     private ProductMapper productMapper;
     private ProductRepository productRepository;
     private CategoryRepository categoryRepository;
-    //private Cloudinary cloudinary;
+    private Cloudinary cloudinary;
     
     @Override
     public ProductDto createProduct(ProductCreateMultipartDto productCreateDto) {
@@ -38,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(categoryRepository.findByName(productCreateDto.name_category())
             .orElseThrow(() -> new ResourceNotFoundException("La categoría con nombre: " + productCreateDto.name_category() + " no existe.")));
 
-        /*// Manejar la imagen con Cloudinary
+        // Manejar la imagen con Cloudinary
         if (productCreateDto.image() != null && !productCreateDto.image().isEmpty()) {
             try {
                 Map uploadResult = cloudinary.uploader().upload(productCreateDto.image().getBytes(), ObjectUtils.emptyMap());
@@ -46,7 +45,7 @@ public class ProductServiceImpl implements ProductService {
             } catch (Exception e) {
                 throw new RuntimeException("Error al subir la imagen a Cloudinary: " + e.getMessage());
             }
-        }*/
+        }
 
         Product savedProduct = productRepository.save(product);
         return productMapper.productToProductDto(savedProduct);
@@ -76,7 +75,7 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(categoryRepository.findByName(productCreateDto.name_category())
             .orElseThrow(() -> new ResourceNotFoundException("La categoría con nombre: " + productCreateDto.name_category() + " no existe.")));
 
-        /*// Manejar la imagen con Cloudinary
+        // Manejar la imagen con Cloudinary
         if (productCreateDto.image() != null && !productCreateDto.image().isEmpty()) {
             try {
                 Map uploadResult = cloudinary.uploader().upload(productCreateDto.image().getBytes(), ObjectUtils.emptyMap());
@@ -84,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
             } catch (Exception e) {
                 throw new RuntimeException("Error al subir la imagen a Cloudinary: " + e.getMessage());
             }
-        }*/
+        }
 
         Product updatedProduct = productRepository.save(product);
         return productMapper.productToProductDto(updatedProduct);

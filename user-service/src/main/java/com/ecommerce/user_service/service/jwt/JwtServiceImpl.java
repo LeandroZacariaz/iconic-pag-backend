@@ -26,7 +26,6 @@ public class JwtServiceImpl implements JwtService {
 
       public JwtServiceImpl(@Value("${jwt.secret}") String jwtSecret) {
           this.jwtSecret = jwtSecret;
-          System.out.println("JWT Secret: " + jwtSecret);
       }
 
     public String getToken(UserDetails user) {

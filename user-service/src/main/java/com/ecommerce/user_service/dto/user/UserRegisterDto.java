@@ -21,7 +21,6 @@ public record UserRegisterDto(
     @NotNull(message = "The user password cannot be null.")
     @NotBlank(message = "The user password cannot be empty.")
     @Schema(description = "Contraseña del usuario", example = "securePass123")
-    String password,
-    RoleEnumUser roleEnumUser) {
+    String password) {
 
 }

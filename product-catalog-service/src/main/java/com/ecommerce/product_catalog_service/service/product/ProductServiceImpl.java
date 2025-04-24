@@ -1,8 +1,9 @@
 package com.ecommerce.product_catalog_service.service.product;
 
-import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.cloudinary.Cloudinary;
@@ -52,8 +53,8 @@ public class ProductServiceImpl implements ProductService {
     }
     
     @Override
-    public List<ProductDto> getAllProducts() {
-        return productRepository.findAll().stream().map(productMapper::productToProductDto).toList();
+    public Page<ProductDto> getAllProducts(Pageable pageable) {
+        return productRepository.findAll(pageable).map(productMapper::productToProductDto);
     }
 
     @Override

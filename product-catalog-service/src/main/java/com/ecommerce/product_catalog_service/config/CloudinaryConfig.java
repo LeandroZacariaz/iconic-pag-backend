@@ -13,9 +13,9 @@ public class CloudinaryConfig {
     @Bean
     @ConditionalOnProperty(name = "cloudinary.enabled", havingValue = "true")
     public Cloudinary cloudinary(
-        @Value("${cloudinary.cloud-name:}") String cloudName,
-        @Value("${cloudinary.api-key:}") String apiKey,
-        @Value("${cloudinary.api-secret:}") String apiSecret
+        @Value("${CLOUDINARTY_NAME:}") String cloudName,
+        @Value("${CLOUDINARTY_API_KEY:}") String apiKey,
+        @Value("${CLOUDINARTY_API_SECRET:}") String apiSecret
     ) {
         if (cloudName.isBlank() || apiKey.isBlank() || apiSecret.isBlank()) {
             throw new IllegalStateException("Cloudinary config is missing");

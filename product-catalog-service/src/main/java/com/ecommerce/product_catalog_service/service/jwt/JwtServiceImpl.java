@@ -17,10 +17,10 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    @Value("${jwt.secret}")
+    @Value("${JWT_SECRET}")
       private String jwtSecret;
 
-      public JwtServiceImpl(@Value("${jwt.secret}") String jwtSecret) {
+      public JwtServiceImpl(@Value("${JWT_SECRET}") String jwtSecret) {
           this.jwtSecret = jwtSecret;
       }
 

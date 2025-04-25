@@ -41,7 +41,7 @@ public class JwtServiceImpl implements JwtService {
    
     private String getToken(Map<String, Object> extraClaims, UserDetails user) {
       try {
-         return Jwts.builder().setClaims(extraClaims).setSubject(user.getUsername()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + 86400000L)).signWith(getKey(), SignatureAlgorithm.HS256).compact();
+         return Jwts.builder().setClaims(extraClaims).setSubject(user.getUsername()).setIssuedAt(new Date(System.currentTimeMillis())).setExpiration(new Date(System.currentTimeMillis() + 2592000000L)).signWith(getKey(), SignatureAlgorithm.HS256).compact();
       } catch (Exception var4) {
          throw new JwtException("Error mientras se creaba el token: " + var4.getMessage());
       }

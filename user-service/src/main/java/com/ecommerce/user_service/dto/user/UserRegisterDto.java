@@ -1,7 +1,5 @@
 package com.ecommerce.user_service.dto.user;
 
-import com.ecommerce.user_service.domain.enums.RoleEnumUser;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

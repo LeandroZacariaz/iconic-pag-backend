@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public record ProductCreateMultipartDto(
     @NotBlank(message = "El nombre es obligatorio")
     String name,
@@ -23,7 +25,6 @@ public record ProductCreateMultipartDto(
     @NotBlank(message = "La categoría es obligatoria")
     String name_category,
 
-    MultipartFile image
+    List<MultipartFile> images
 ) {
-    
 }

@@ -1,5 +1,7 @@
 package com.ecommerce.product_catalog_service.dto.product;
 
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "DTO para representar un producto sin usar la entidad directamente")
@@ -10,8 +12,7 @@ public record ProductDto(
     String name,
     @Schema(description = "Descripción del producto", example = "Una laptop de alto rendimiento.")
     String description,
-    @Schema(description = "Imagen del producto")
-    String image,
+    List<String> imageUrls,
     @Schema(description = "Precio del producto", example = "999.99")
     Double price,
     @Schema(description = "Cantidad en inventario", example = "50")

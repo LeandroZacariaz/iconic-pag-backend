@@ -16,6 +16,7 @@ import com.ecommerce.product_catalog_service.dto.product.ProductDto;
 import com.ecommerce.product_catalog_service.exceptions.ResourceNotFoundException;
 import com.ecommerce.product_catalog_service.mappers.product.ProductMapper;
 import com.ecommerce.product_catalog_service.repository.CategoryRepository;
+import com.ecommerce.product_catalog_service.repository.ProductImageRepository;
 import com.ecommerce.product_catalog_service.repository.ProductRepository;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +27,7 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductMapper productMapper;
     private ProductRepository productRepository;
+    private ProductImageRepository productImageRepository;
     private CategoryRepository categoryRepository;
     private Cloudinary cloudinary;
     
@@ -45,7 +47,9 @@ public class ProductServiceImpl implements ProductService {
             for (MultipartFile image : productCreateDto.images()) {
                 if (!image.isEmpty()) {
                     try {
-                        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
+                        Map<String, Object> uploadOptions = ObjectUtils.asMap("format", "webp", // Guardar como WebP
+                        "quality", "auto");
+                        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), uploadOptions);
                         ProductImage productImage = new ProductImage();
                         productImage.setImageUrl(uploadResult.get("url").toString());
                         productImage.setProduct(product);
@@ -61,18 +65,16 @@ public class ProductServiceImpl implements ProductService {
         Product savedProduct = productRepository.save(product);
         return productMapper.productToProductDto(savedProduct);
     }
-    
+
     @Override
     public List<ProductDto> getAllProducts() {
         return productRepository.findAll().stream().map(productMapper::productToProductDto).toList();
     }
-    
 
     @Override
     public ProductDto getProductById(Long id) {
         return productRepository.findById(id).map(productMapper::productToProductDto)
-                                .orElseThrow(() -> 
-                                new ResourceNotFoundException("El producto con ID: " + id + " no existe."));
+            .orElseThrow(() -> new ResourceNotFoundException("El producto con ID: " + id + " no existe."));
     }
 
     @Override
@@ -87,23 +89,33 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(categoryRepository.findByName(productCreateDto.name_category())
             .orElseThrow(() -> new ResourceNotFoundException("La categoría con nombre: " + productCreateDto.name_category() + " no existe.")));
 
-        // Actualizar imágenes solo si se envían nuevas
+        // Sincronizar imágenes
+        List<ProductImage> currentImages = product.getImages();
+        List<String> existingImageUrls = productCreateDto.existingImageUrls() != null ? productCreateDto.existingImageUrls() : List.of();
+
+        // Eliminar imágenes que no están en existingImageUrls
+        currentImages.removeIf(image -> !existingImageUrls.contains(image.getImageUrl()));
+
+        // Agregar nuevas imágenes si se enviaron
         if (productCreateDto.images() != null && !productCreateDto.images().isEmpty()) {
-            product.getImages().clear(); // Eliminar imágenes existentes solo si hay nuevas
             for (MultipartFile image : productCreateDto.images()) {
                 if (!image.isEmpty()) {
                     try {
-                        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), ObjectUtils.emptyMap());
+                        Map<String, Object> uploadOptions = ObjectUtils.asMap(
+                            "format", "webp",
+                            "quality", "auto"
+                        );
+                        Map uploadResult = cloudinary.uploader().upload(image.getBytes(), uploadOptions);
                         ProductImage productImage = new ProductImage();
                         productImage.setImageUrl(uploadResult.get("url").toString());
                         productImage.setProduct(product);
-                        product.getImages().add(productImage);
+                        currentImages.add(productImage);
                     } catch (Exception e) {
                         throw new RuntimeException("Error al subir la imagen a Cloudinary: " + e.getMessage());
                     }
                 }
             }
-        } // Si no se envían imágenes, se mantienen las existentes
+        }
 
         Product updatedProduct = productRepository.save(product);
         return productMapper.productToProductDto(updatedProduct);

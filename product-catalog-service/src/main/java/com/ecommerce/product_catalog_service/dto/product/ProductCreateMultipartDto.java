@@ -25,6 +25,8 @@ public record ProductCreateMultipartDto(
     @NotBlank(message = "La categoría es obligatoria")
     String name_category,
 
-    List<MultipartFile> images
+    List<MultipartFile> images,
+
+    List<String> existingImageUrls // Nuevo campo para URLs de imágenes existentes
 ) {
 }
